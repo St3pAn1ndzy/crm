@@ -73,21 +73,6 @@ Django = ">=5.2"
 drf = ["djangorestframework"]
 
 [[package]]
-name = "djangorestframework"
-version = "3.18.0"
-description = "Web APIs for Django, made easy."
-optional = false
-python-versions = ">=3.10"
-groups = ["main"]
-files = [
-    {file = "djangorestframework-3.18.0-py3-none-any.whl", hash = "sha256:381fc44d3249c9565c5f723850855b734e99030eb30957a49f506d3fe11d7dcb"},
-    {file = "djangorestframework-3.18.0.tar.gz", hash = "sha256:2323a5111837e0b784dcb8323abc78ecc54fa2a5af7aff2677cf50cdd849477f"},
-]
-
-[package.dependencies]
-django = ">=5.2"
-
-[[package]]
 name = "markdown"
 version = "3.10.3"
 description = "Python implementation of John Gruber's Markdown."
@@ -267,4 +252,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4.0"
-content-hash = "535ce1e041d59767eaf084cb4799545d94bfb91852e3c07d43c44292d7cdae99"
+content-hash = "4c868f458b284fd6c626696c7a7cd2dff0623b81c511663e25f471a9db4ccd17"
