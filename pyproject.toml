@@ -1,0 +1,20 @@
+[project]
+name = "crm"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Stepan Obukhov",email = "stepanobukhov2009@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django (>=6.1,<7.0)",
+    "djangorestframework (>=3.18.0,<4.0.0)",
+    "markdown (>=3.10.3,<4.0.0)",
+    "django-filter (>=26.1,<27.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
