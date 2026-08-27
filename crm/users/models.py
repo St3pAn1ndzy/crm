@@ -10,7 +10,10 @@ class User(AbstractUser):
         ("marketer", "Маркетолог"),
         ("manager", "Менеджер"),
     ]
-    role = models.CharField(max_length=50, choices=ROLE_CHOICES, default="manager", verbose_name="Роль в системе")
+    role = models.CharField(max_length=50,
+                            choices=ROLE_CHOICES,
+                            default="manager",
+                            verbose_name="Роль в системе")
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

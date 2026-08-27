@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import Customer
 
 
@@ -20,9 +21,11 @@ def make_unarchived(modeladmin, request, queryset):
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ("id", "get_client_name", "get_client_phone", "is_active", "created_at")
+    list_display = ("id", "get_client_name", "get_client_phone",
+                    "is_active", "created_at")
     list_filter = ("is_active", "created_at")
-    search_fields = ("company_name", "inn", "lead__first_name", "lead__last_name", "lead__phone")
+    search_fields = ("company_name", "inn", "lead__first_name",
+                     "lead__last_name", "lead__phone")
     list_editable = ("is_active",)
 
     actions = [make_archived, make_unarchived]

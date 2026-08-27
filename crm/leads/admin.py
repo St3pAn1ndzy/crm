@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import Lead
 
 
@@ -20,7 +21,8 @@ def make_unarchived(modeladmin, request, queryset):
 
 @admin.register(Lead)
 class LeadAdmin(admin.ModelAdmin):
-    list_display = ("id", "first_name", "last_name", "phone", "email", "advertisement", "status")
+    list_display = ("id", "first_name", "last_name",
+                    "phone", "email", "advertisement", "status")
     list_filter = ("status", "advertisement")
     search_fields = ("first_name", "last_name", "phone", "email")
     list_editable = ("status",)

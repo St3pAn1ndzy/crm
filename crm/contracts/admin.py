@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import Contract
 
 
@@ -20,7 +21,8 @@ def make_unarchived(modeladmin, request, queryset):
 
 @admin.register(Contract)
 class ContractAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "customer", "service", "start_date", "end_date", "cost", "is_active")
+    list_display = ("id", "title", "customer", "service",
+                    "start_date", "end_date", "cost", "is_active")
     list_filter = ("is_active", "start_date", "end_date", "service")
     search_fields = ("title", "customer__company_name", "customer__lead__last_name")
     list_editable = ("is_active",)
