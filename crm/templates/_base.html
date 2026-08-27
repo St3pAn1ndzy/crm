@@ -22,37 +22,49 @@
             </h1>
         </div>
         <ul class="list-unstyled px-2">
-            {% if perms.products.view_product %}
+            {% if perms.services.view_service %}
             <li><a href="/products/" class="bar-item text-decoration-none px-3 py-3 d-block">
                 <span><i class="fas fa-microchip"></i></span><span class="ml-1"> Услуги</span>
             </a></li>
             {% endif %}
-            {% if perms.advertisements.view_advertisement %}
+
+            {% if perms.ads.view_ad %}
             <li><a href="/ads/" class="bar-item text-decoration-none px-3 py-3 d-block">
                 <span><i class="fas fa-ad"></i></span><span class="ml-1"> Рекламные компании</span>
             </a></li>
             {% endif %}
+
             {% if perms.leads.view_lead %}
             <li><a href="/leads/" class="bar-item text-decoration-none px-3 py-3 d-block">
                 <span><i class="fas fa-user-clock"></i></span><span class="px-1"> Лиды</span>
             </a></li>
             {% endif %}
+
             {% if perms.contracts.view_contract %}
             <li><a href="/contracts/" class="bar-item text-decoration-none px-3 py-3 d-block">
                 <span><i class="fas fa-file-alt"></i></span><span class="px-1"> Контракты</span>
             </a></li>
             {% endif %}
+
             {% if perms.customers.view_customer %}
             <li><a href="/customers/" class="bar-item text-decoration-none px-3 py-3 d-block">
                 <span><i class="fas fa-user-check"></i></span><span class="px-1"> Активные клиенты</span>
             </a></li>
             {% endif %}
+
             <li>
                 <hr>
             </li>
-            <li><a href="/accounts/logout" class="bar-item text-decoration-none px-3 py-3 d-block">
-                <span><i class="fas fa-sign-out-alt"></i></span><span class="px-1"> Выход</span>
-            </a></li>
+
+            <li>
+                <form method="post" action="{% url 'logout' %}" class="w-100">
+                    {% csrf_token %}
+                    <button type="submit"
+                            class="bar-item text-decoration-none px-3 py-3 d-block w-100 text-start border-0 bg-transparent text-secondary p-0">
+                        <span><i class="fas fa-sign-out-alt"></i></span><span class="px-1"> Выход</span>
+                    </button>
+                </form>
+            </li>
         </ul>
     </div>
     <div class="content px-3 pt-4">
