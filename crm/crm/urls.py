@@ -19,7 +19,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from crm.views import DashboardIndexView
+
 urlpatterns = [
+    path("", DashboardIndexView.as_view(), name="index"),
     path('admin/', admin.site.urls),
     path('', include('services.urls')),
     path('', include('ads.urls')),
