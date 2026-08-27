@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include('ads.urls')),
     path('', include('leads.urls')),
     path('', include('customers.urls')),
+    path('', include('contracts.urls')),
 ]
 
 if settings.DEBUG:
