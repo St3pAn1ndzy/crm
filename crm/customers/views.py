@@ -9,6 +9,7 @@ from django.views.generic import (
     UpdateView,
 )
 
+from contracts.models import Contract
 from .forms import ConvertLeadForm, CustomerEditForm
 from .models import Customer
 
@@ -71,14 +72,24 @@ def convert_lead_to_customer_view(request):
         if form.is_valid():
             lead = form.cleaned_data['lead']
 
-            customer = Customer.objects.create( # noqa: F841
+            customer = Customer.objects.create(
                 lead=lead
             )
 
-            lead.status = 'converted'
+            Contract.objects.create(
+                customer=customer,
+                title=form.cleaned_data['contract_title'],
+                service=form.cleaned_data['service'],
+                document=form.cleaned_data['document'],
+                start_date=form.cleaned_data['start_date'],
+                end_date=form.cleaned_data['end_date'],
+                cost=form.cleaned_data['cost']
+            )
+
+            lead.status = "converted"
             lead.save()
 
-            return redirect("customers:customers-list")
+            return redirect('customers:customers-list')
     else:
         form = ConvertLeadForm()
 

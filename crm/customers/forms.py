@@ -31,7 +31,7 @@ class ConvertLeadForm(forms.Form):
         label="Период действия",
         widget=forms.DateInput(attrs={"type": "date"}),
     )
-    price = forms.DecimalField(
+    cost = forms.DecimalField(
         max_digits=12, decimal_places=2, required=True, label="Сумма"
     )
 
