@@ -24,6 +24,7 @@ from crm.views import DashboardIndexView
 urlpatterns = [
     path("", DashboardIndexView.as_view(), name="index"),
     path('admin/', admin.site.urls),
+    path("auth/", include("django.contrib.auth.urls")),
     path('', include('services.urls')),
     path('', include('ads.urls')),
     path('', include('leads.urls')),
