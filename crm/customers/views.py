@@ -3,14 +3,13 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import (
-    ListView,
+    DeleteView,
     DetailView,
-    UpdateView, DeleteView,
+    ListView,
+    UpdateView,
 )
 
-from leads.models import Lead
 from .forms import ConvertLeadForm, CustomerEditForm
-
 from .models import Customer
 
 
@@ -72,7 +71,7 @@ def convert_lead_to_customer_view(request):
         if form.is_valid():
             lead = form.cleaned_data['lead']
 
-            customer = Customer.objects.create(
+            customer = Customer.objects.create( # noqa: F841
                 lead=lead
             )
 

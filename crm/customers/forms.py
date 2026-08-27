@@ -1,8 +1,8 @@
 from django import forms
-
-from customers.models import Customer
 from leads.models import Lead
 from services.models import Service
+
+from customers.models import Customer
 
 
 class ConvertLeadForm(forms.Form):
