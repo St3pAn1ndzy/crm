@@ -1,4 +1,6 @@
 from contracts.models import Contract
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db import transaction
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -14,24 +16,27 @@ from .forms import ConvertLeadForm, CustomerEditForm
 from .models import Customer
 
 
-class CustomersListView(ListView):
+class CustomersListView(PermissionRequiredMixin, ListView):
     model = Customer
     template_name = 'customers/customers-list.html'
     context_object_name = 'customers'
+    permission_required = 'customers.view_customer'
 
     def get_queryset(self):
         return Customer.objects.filter(is_active=True)
 
 
-class CustomerDetailView(DetailView):
+class CustomerDetailView(PermissionRequiredMixin, DetailView):
     model = Customer
     template_name = 'customers/customers-detail.html'
+    permission_required = 'customers.view_customer'
 
 
-class CustomerUpdateView(UpdateView):
+class CustomerUpdateView(PermissionRequiredMixin, UpdateView):
     model = Customer
     form_class = CustomerEditForm
     template_name = 'customers/customers-edit.html'
+    permission_required = 'customers.change_customer'
 
     @transaction.atomic
     def form_valid(self, form):
@@ -51,10 +56,11 @@ class CustomerUpdateView(UpdateView):
         return reverse_lazy("customers:customers-detail", kwargs={"pk": self.object.pk})
 
 
-class CustomerDeleteView(DeleteView):
+class CustomerDeleteView(PermissionRequiredMixin, DeleteView):
     model = Customer
     template_name = 'customers/customers-delete.html'
     success_url = reverse_lazy("customers:customers-list")
+    permission_required = "customers.delete_customer"
 
     def form_valid(self, form):
         success_url = self.get_success_url()
@@ -65,6 +71,7 @@ class CustomerDeleteView(DeleteView):
         return HttpResponseRedirect(success_url)
 
 
+@permission_required("customers.add_customer", raise_exception=True)
 @transaction.atomic
 def convert_lead_to_customer_view(request):
     if request.method == 'POST':
