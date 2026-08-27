@@ -1,3 +1,4 @@
+from contracts.models import Contract
 from django.db import transaction
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -9,7 +10,6 @@ from django.views.generic import (
     UpdateView,
 )
 
-from contracts.models import Contract
 from .forms import ConvertLeadForm, CustomerEditForm
 from .models import Customer
 
