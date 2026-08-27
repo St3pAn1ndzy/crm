@@ -1,3 +1,4 @@
+from django.db.models.aggregates import Count, Sum
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -59,3 +60,9 @@ class AdsStatisticListView(ListView):
     model = Ad
     template_name = 'ads/ads-statistic.html'
     context_object_name = 'ads'
+
+    def get_queryset(self):
+        return Ad.objects.annotate(
+            leads_count=Count('lead'),
+            customers_count=Count('lead__customer'),
+            profit=Sum('lead__customer__contract__cost'))
