@@ -17,7 +17,7 @@ class AdsListView(ListView):
     context_object_name = 'ads'
 
     def get_queryset(self):
-        return Ad.objects.only('title').filter(is_active=True)
+        return Ad.objects.filter(is_active=True)
 
 
 class AdsCreateView(CreateView):
@@ -36,9 +36,6 @@ class AdsUpdateView(UpdateView):
     model = Ad
     fields = ["title", "channel", "product", "budget"]
     template_name = 'ads/ads-edit.html'
-
-    def get_queryset(self):
-        return Ad.objects.only("title", "channel", "product", "budget")
 
     def get_success_url(self):
         return reverse_lazy("ads-detail", kwargs={"pk": self.object.pk})
@@ -62,6 +59,3 @@ class AdsStatisticListView(ListView):
     model = Ad
     template_name = 'ads/ads-statistic.html'
     context_object_name = 'ads'
-
-    def get_queryset(self):
-        return Ad.objects.all()
