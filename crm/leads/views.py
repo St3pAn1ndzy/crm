@@ -1,10 +1,11 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import (
-    ListView,
     CreateView,
+    DeleteView,
     DetailView,
-    UpdateView, DeleteView
+    ListView,
+    UpdateView,
 )
 
 from .models import Lead
