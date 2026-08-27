@@ -9,6 +9,8 @@ from .views import (
     AdsUpdateView,
 )
 
+app_name = 'ads'
+
 urlpatterns = [
     path('ads/', AdsListView.as_view(), name='ads-list'),
     path('ads/statistic/', AdsStatisticListView.as_view(), name='ads-statistic'),

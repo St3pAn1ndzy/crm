@@ -8,6 +8,8 @@ from .views import (
     LeadsViewList,
 )
 
+app_name = 'leads'
+
 urlpatterns = [
     path('leads/', LeadsViewList.as_view(), name='leads-list'),
     path('leads/new/', LeadsCreateView.as_view(), name='leads-create'),

@@ -8,6 +8,8 @@ from services.views import (
     ServicesUpdateView,
 )
 
+app_name = 'services'
+
 urlpatterns = [
     path('products/',
          ServicesListView.as_view(),
