@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.cache import cache
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -51,6 +52,9 @@ class ContractsCreateView(PermissionRequiredMixin, CreateView):
             f"'{self.object.title}' со сроком до {self.object.end_date}. "
             f"(ID: {self.object.id})"
         )
+
+        cache.delete("crm_ads_statistic_list")
+        logger.info("Кэш статистики рекламы автоматически сброшен из-за добавления нового контракта.")
 
         return response
 

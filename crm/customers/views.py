@@ -3,6 +3,7 @@ import logging
 from contracts.models import Contract
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.cache import cache
 from django.db import transaction
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -114,6 +115,9 @@ def convert_lead_to_customer_view(request):
 
                 lead.status = "converted"
                 lead.save()
+
+                cache.delete("crm_ads_statistic_list")
+                logger.info("Кэш статистики рекламы автоматически сброшен из-за конвертации лида.")
 
                 logger.info(
                     f"Пользователь {request.user.username} успешно "

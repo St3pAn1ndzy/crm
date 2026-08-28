@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.cache import cache
 from django.db.models.aggregates import Count, Sum
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -104,7 +105,21 @@ class AdsStatisticListView(PermissionRequiredMixin, ListView):
     permission_required = "ads.view_ad"
 
     def get_queryset(self):
-        return Ad.objects.annotate(
+        cache_key = "crm_ads_statistic_list"
+        cached_data = cache.get(cache_key)
+
+        if cached_data is not None:
+            logger.info("Статистика рекламы успешно загружена ИЗ КЭША (без запросов к БД).")
+            return cached_data
+
+        logger.warning("Кэш пуст! Запускается тяжелый расчет статистики по базе данных PostgreSQL...")
+
+        campaigns = Ad.objects.annotate(
             leads_count=Count('lead', distinct=True),
             customers_count=Count('lead__customer', distinct=True),
             profit=Sum('lead__customer__contract__cost'))
+
+        cached_list = list(campaigns)
+        cache.set(cache_key, cached_list, 86400)
+
+        return cached_list
