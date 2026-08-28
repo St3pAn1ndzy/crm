@@ -23,6 +23,7 @@ from crm.views import DashboardIndexView
 
 urlpatterns = [
     path("", DashboardIndexView.as_view(), name="index"),
+    path("", include("django_prometheus.urls")),
     path('admin/', admin.site.urls),
     path("auth/", include("django.contrib.auth.urls")),
     path('', include('services.urls')),
