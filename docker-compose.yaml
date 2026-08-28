@@ -30,6 +30,7 @@ services:
     command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./logs:/app/logs
+      - ./crm/media:/app/media
     stdin_open: true
     tty: true
     depends_on:
