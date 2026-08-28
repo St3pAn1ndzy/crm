@@ -20,7 +20,10 @@ class AdsListView(PermissionRequiredMixin, ListView):
     permission_required = "ads.view_ad"
 
     def get_queryset(self):
-        return Ad.objects.filter(is_active=True)
+        return (
+            Ad.objects.filter(is_active=True)
+            .select_related('product')
+        )
 
 
 class AdsCreateView(PermissionRequiredMixin, CreateView):

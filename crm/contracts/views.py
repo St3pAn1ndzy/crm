@@ -20,7 +20,10 @@ class ContractsListView(PermissionRequiredMixin, ListView):
     permission_required = 'contracts.view_contract'
 
     def get_queryset(self):
-        return Contract.objects.filter(is_active=True)
+        return (
+            Contract.objects.filter(is_active=True)
+            .select_related('customer__lead', 'service')
+        )
 
 
 class ContractsDetailView(PermissionRequiredMixin, DetailView):
