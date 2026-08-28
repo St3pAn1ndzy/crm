@@ -2,6 +2,7 @@ import logging
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.cache import cache
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -34,6 +35,7 @@ class LeadsCreateView(PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy("leads:leads-list")
     permission_required = 'leads.add_lead'
 
+    @transaction.atomic
     def form_valid(self, form):
         response = super().form_valid(form)
 

@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -33,6 +34,7 @@ class ServicesCreateView(PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy("services:products-list")
     permission_required = 'services.add_service'
 
+    @transaction.atomic
     def form_valid(self, form):
         response = super().form_valid(form)
 

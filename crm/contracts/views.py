@@ -2,6 +2,7 @@ import logging
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.cache import cache
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -44,6 +45,7 @@ class ContractsCreateView(PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy('contracts:contracts-list')
     permission_required = "contracts.add_contract"
 
+    @transaction.atomic
     def form_valid(self, form):
         response = super().form_valid(form)
 

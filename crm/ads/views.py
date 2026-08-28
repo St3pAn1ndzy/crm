@@ -2,6 +2,7 @@ import logging
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.cache import cache
+from django.db import transaction
 from django.db.models.aggregates import Count, Sum
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -38,6 +39,7 @@ class AdsCreateView(PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy("ads:ads-list")
     permission_required = "ads.add_ad"
 
+    @transaction.atomic
     def form_valid(self, form):
         response = super().form_valid(form)
 
