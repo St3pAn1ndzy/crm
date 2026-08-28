@@ -117,7 +117,8 @@ def convert_lead_to_customer_view(request):
                 lead.save()
 
                 cache.delete("crm_ads_statistic_list")
-                logger.info("Кэш статистики рекламы автоматически сброшен из-за конвертации лида.")
+                logger.info("Кэш статистики рекламы автоматически "
+                            "сброшен из-за конвертации лида.")
 
                 logger.info(
                     f"Пользователь {request.user.username} успешно "

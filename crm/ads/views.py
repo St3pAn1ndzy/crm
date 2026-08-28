@@ -109,10 +109,12 @@ class AdsStatisticListView(PermissionRequiredMixin, ListView):
         cached_data = cache.get(cache_key)
 
         if cached_data is not None:
-            logger.info("Статистика рекламы успешно загружена ИЗ КЭША (без запросов к БД).")
+            logger.info("Статистика рекламы успешно загружена "
+                        "ИЗ КЭША (без запросов к БД).")
             return cached_data
 
-        logger.warning("Кэш пуст! Запускается тяжелый расчет статистики по базе данных PostgreSQL...")
+        logger.warning("Кэш пуст! Запускается тяжелый расчет статистики "
+                       "по базе данных PostgreSQL...")
 
         campaigns = Ad.objects.annotate(
             leads_count=Count('lead', distinct=True),

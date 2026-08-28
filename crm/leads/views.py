@@ -44,7 +44,8 @@ class LeadsCreateView(PermissionRequiredMixin, CreateView):
         )
 
         cache.delete("crm_ads_statistic_list")
-        logger.info("Кэш статистики рекламы автоматически сброшен из-за добавления нового контракта.")
+        logger.info("Кэш статистики рекламы автоматически сброшен "
+                    "из-за добавления нового контракта.")
 
         return response
 
