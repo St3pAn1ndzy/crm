@@ -47,7 +47,7 @@ class LeadsCreateView(PermissionRequiredMixin, CreateView):
 
         cache.delete("crm_ads_statistic_list")
         logger.info("Кэш статистики рекламы автоматически сброшен "
-                    "из-за добавления нового контракта.")
+                    "из-за добавления нового лида.")
 
         return response
 
@@ -76,6 +76,10 @@ class LeadsUpdateView(PermissionRequiredMixin, UpdateView):
             f"(ID: {self.object.id})"
         )
 
+        cache.delete("crm_ads_statistic_list")
+        logger.info("Кэш статистики рекламы автоматически сброшен из-за "
+                    "обновления лида.")
+
         return response
 
 
@@ -96,5 +100,9 @@ class LeadsDeleteView(PermissionRequiredMixin, DeleteView):
             f"клиенту '{self.object.first_name} {self.object.last_name}' "
             f"(ID: {self.object.id})"
         )
+
+        cache.delete("crm_ads_statistic_list")
+        logger.info("Кэш статистики рекламы автоматически сброшен из-за "
+                    "удаления лида.")
 
         return HttpResponseRedirect(success_url)

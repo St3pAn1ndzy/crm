@@ -50,6 +50,10 @@ class AdsCreateView(PermissionRequiredMixin, CreateView):
             f"(ID: {self.object.id})"
         )
 
+        cache.delete("crm_ads_statistic_list")
+        logger.info("Кэш статистики рекламы автоматически сброшен из-за "
+                    "добавления новой рекламной кампании.")
+
         return response
 
 
@@ -77,6 +81,10 @@ class AdsUpdateView(PermissionRequiredMixin, UpdateView):
             f"(ID: {self.object.id})"
         )
 
+        cache.delete("crm_ads_statistic_list")
+        logger.info("Кэш статистики рекламы автоматически сброшен из-за "
+                    "обновления рекламной кампании.")
+
         return response
 
 
@@ -96,6 +104,10 @@ class AdsDeleteView(PermissionRequiredMixin, DeleteView):
             f"Пользователь '{self.request.user.username}' отправил в архив "
             f"рекламную кампанию '{self.object.title}' (ID: {self.object.id})"
         )
+
+        cache.delete("crm_ads_statistic_list")
+        logger.info("Кэш статистики рекламы автоматически сброшен из-за "
+                    "удаления рекламной кампании.")
 
         return HttpResponseRedirect(success_url)
 

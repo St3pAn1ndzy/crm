@@ -78,6 +78,10 @@ class ContractsUpdateView(PermissionRequiredMixin, UpdateView):
             f"(ID: {self.object.id})"
         )
 
+        cache.delete("crm_ads_statistic_list")
+        logger.info("Кэш статистики рекламы автоматически сброшен из-за "
+                    "обновления контракта.")
+
         return response
 
 
@@ -97,5 +101,9 @@ class ContractsDeleteView(PermissionRequiredMixin, DeleteView):
             f"Пользователь '{self.request.user.username}' отправил в архив "
             f"контракт '{self.object.title}' (ID: {self.object.id})"
         )
+
+        cache.delete("crm_ads_statistic_list")
+        logger.info("Кэш статистики рекламы автоматически сброшен из-за "
+                    "расторжения контракта.")
 
         return HttpResponseRedirect(success_url)
