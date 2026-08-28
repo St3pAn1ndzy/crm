@@ -1,6 +1,7 @@
+from django.views.generic import TemplateView
+
 from ads.models import Ad
 from customers.models import Customer
-from django.views.generic import TemplateView
 from leads.models import Lead
 from services.models import Service
 

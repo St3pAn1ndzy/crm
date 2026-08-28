@@ -1,6 +1,5 @@
 import logging
 
-from contracts.models import Contract
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.cache import cache
@@ -14,6 +13,8 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
+
+from contracts.models import Contract
 
 from .forms import ConvertLeadForm, CustomerEditForm
 from .models import Customer
