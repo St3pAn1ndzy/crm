@@ -1,3 +1,5 @@
+import logging
+
 from contracts.models import Contract
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -14,6 +16,8 @@ from django.views.generic import (
 
 from .forms import ConvertLeadForm, CustomerEditForm
 from .models import Customer
+
+logger = logging.getLogger("crm")
 
 
 class CustomersListView(PermissionRequiredMixin, ListView):
@@ -53,6 +57,12 @@ class CustomerUpdateView(PermissionRequiredMixin, UpdateView):
         lead.email = form.cleaned_data["email"]
         lead.save()
 
+        logger.info(
+            f"Пользователь '{self.request.user.username}' отредактировал "
+            f"данные клиента "
+            f"'{lead.first_name} {lead.last_name}' (ID: {self.object.id})."
+        )
+
         return response
 
     def get_success_url(self):
@@ -71,6 +81,12 @@ class CustomerDeleteView(PermissionRequiredMixin, DeleteView):
         self.object.is_active = False
         self.object.save()
 
+        logger.warning(
+            f"Пользователь '{self.request.user.username}' отправил в архив "
+            f"клиента '{self.object.first_name} {self.object.last_name}' "
+            f"(ID: {self.object.id})"
+        )
+
         return HttpResponseRedirect(success_url)
 
 
@@ -81,25 +97,38 @@ def convert_lead_to_customer_view(request):
         form = ConvertLeadForm(request.POST, request.FILES)
         if form.is_valid():
             lead = form.cleaned_data['lead']
+            try:
+                customer = Customer.objects.create(
+                    lead=lead
+                )
 
-            customer = Customer.objects.create(
-                lead=lead
-            )
+                Contract.objects.create(
+                    customer=customer,
+                    title=form.cleaned_data['contract_title'],
+                    service=form.cleaned_data['service'],
+                    document=form.cleaned_data['document'],
+                    start_date=form.cleaned_data['start_date'],
+                    end_date=form.cleaned_data['end_date'],
+                    cost=form.cleaned_data['cost']
+                )
 
-            Contract.objects.create(
-                customer=customer,
-                title=form.cleaned_data['contract_title'],
-                service=form.cleaned_data['service'],
-                document=form.cleaned_data['document'],
-                start_date=form.cleaned_data['start_date'],
-                end_date=form.cleaned_data['end_date'],
-                cost=form.cleaned_data['cost']
-            )
+                lead.status = "converted"
+                lead.save()
 
-            lead.status = "converted"
-            lead.save()
+                logger.info(
+                    f"Пользователь {request.user.username} успешно "
+                    f"перевел лида #{lead.id} "
+                    f"({lead.first_name} {lead.last_name}) в статус Активного клиента."
+                )
 
-            return redirect('customers:customers-list')
+                return redirect('customers:customers-list')
+
+            except Exception as e:
+                logger.error(
+                    f"Ошибка при попытке конвертации лида #{lead.id} "
+                    f"пользователем {request.user.username}: {str(e)}"
+                )
+                raise e
     else:
         form = ConvertLeadForm()
 

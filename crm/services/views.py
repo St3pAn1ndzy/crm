@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -10,6 +12,8 @@ from django.views.generic import (
 )
 
 from .models import Service
+
+logger = logging.getLogger("crm")
 
 
 class ServicesListView(PermissionRequiredMixin, ListView):
@@ -26,8 +30,19 @@ class ServicesCreateView(PermissionRequiredMixin, CreateView):
     model = Service
     fields = ["title", "description", "price"]
     template_name = "services/products-create.html"
-    success_url = reverse_lazy("products-list")
+    success_url = reverse_lazy("services:products-list")
     permission_required = 'services.add_service'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        logger.info(
+            f"Пользователь '{self.request.user.username}' добавил новую услугу: "
+            f"'{self.object.title}' стоимостью {self.object.price} руб. "
+            f"(ID: {self.object.id})"
+        )
+
+        return response
 
 
 class ServicesDetailView(PermissionRequiredMixin, DetailView):
@@ -43,12 +58,22 @@ class ServicesUpdateView(PermissionRequiredMixin, UpdateView):
     permission_required = 'services.change_service'
 
     def get_success_url(self):
-        return reverse_lazy("products-detail", kwargs={"pk": self.object.pk})
+        return reverse_lazy("services:products-detail", kwargs={"pk": self.object.pk})
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        logger.info(
+            f"Пользователь '{self.request.user.username}' отредактировал услугу "
+            f"'{self.object.title}'. (ID: {self.object.id})"
+        )
+
+        return response
 
 
 class ServicesDeleteView(PermissionRequiredMixin, DeleteView):
     model = Service
-    success_url = reverse_lazy("products-list")
+    success_url = reverse_lazy("services:products-list")
     template_name = "services/products-delete.html"
     permission_required = 'services.delete_service'
 
@@ -57,5 +82,10 @@ class ServicesDeleteView(PermissionRequiredMixin, DeleteView):
 
         self.object.is_active = False
         self.object.save()
+
+        logger.warning(
+            f"Пользователь '{self.request.user.username}' отправил в архив "
+            f"услугу '{self.object.title}' (ID: {self.object.id})"
+        )
 
         return HttpResponseRedirect(success_url)

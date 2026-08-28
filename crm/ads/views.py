@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models.aggregates import Count, Sum
 from django.http import HttpResponseRedirect
@@ -11,6 +13,8 @@ from django.views.generic import (
 )
 
 from .models import Ad
+
+logger = logging.getLogger("crm")
 
 
 class AdsListView(PermissionRequiredMixin, ListView):
@@ -30,8 +34,20 @@ class AdsCreateView(PermissionRequiredMixin, CreateView):
     model = Ad
     fields = ["title", "channel", "product", "budget"]
     template_name = 'ads/ads-create.html'
-    success_url = reverse_lazy("ads-list")
+    success_url = reverse_lazy("ads:ads-list")
     permission_required = "ads.add_ad"
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        logger.info(
+            f"Пользователь '{self.request.user.username}' добавил новую "
+            f"рекламную кампанию: "
+            f"'{self.object.title}' с бюджетом {self.object.budget} руб. "
+            f"(ID: {self.object.id})"
+        )
+
+        return response
 
 
 class AdsDetailView(PermissionRequiredMixin, DetailView):
@@ -47,13 +63,24 @@ class AdsUpdateView(PermissionRequiredMixin, UpdateView):
     permission_required = "ads.change_ad"
 
     def get_success_url(self):
-        return reverse_lazy("ads-detail", kwargs={"pk": self.object.pk})
+        return reverse_lazy("ads:ads-detail", kwargs={"pk": self.object.pk})
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        logger.info(
+            f"Пользователь '{self.request.user.username}' обновил рекламную кампанию: "
+            f"'{self.object.title}' с бюджетом {self.object.budget} руб. "
+            f"(ID: {self.object.id})"
+        )
+
+        return response
 
 
 class AdsDeleteView(PermissionRequiredMixin, DeleteView):
     model = Ad
     template_name = 'ads/ads-delete.html'
-    success_url = reverse_lazy("ads-list")
+    success_url = reverse_lazy("ads:ads-list")
     permission_required = "ads.delete_ad"
 
     def form_valid(self, form):
@@ -61,6 +88,11 @@ class AdsDeleteView(PermissionRequiredMixin, DeleteView):
 
         self.object.is_active = False
         self.object.save()
+
+        logger.warning(
+            f"Пользователь '{self.request.user.username}' отправил в архив "
+            f"рекламную кампанию '{self.object.title}' (ID: {self.object.id})"
+        )
 
         return HttpResponseRedirect(success_url)
 

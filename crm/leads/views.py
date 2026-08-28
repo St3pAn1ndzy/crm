@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -10,6 +12,8 @@ from django.views.generic import (
 )
 
 from .models import Lead
+
+logger = logging.getLogger("crm")
 
 
 class LeadsViewList(PermissionRequiredMixin, ListView):
@@ -29,6 +33,17 @@ class LeadsCreateView(PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy("leads:leads-list")
     permission_required = 'leads.add_lead'
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        logger.info(
+            f"Пользователь '{self.request.user.username}' добавил нового лида: "
+            f"'({self.object.first_name} {self.object.last_name}). "
+            f"(ID: {self.object.id})"
+        )
+
+        return response
+
 
 class LeadsDetailView(PermissionRequiredMixin, DetailView):
     model = Lead
@@ -45,6 +60,17 @@ class LeadsUpdateView(PermissionRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy("leads:leads-detail", kwargs={"pk": self.object.pk})
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        logger.info(
+            f"Пользователь '{self.request.user.username}' отредактировал данные лида "
+            f"'{self.object.first_name} {self.object.last_name}'. "
+            f"(ID: {self.object.id})"
+        )
+
+        return response
+
 
 class LeadsDeleteView(PermissionRequiredMixin, DeleteView):
     model = Lead
@@ -57,5 +83,11 @@ class LeadsDeleteView(PermissionRequiredMixin, DeleteView):
 
         self.object.status = "refused"
         self.object.save()
+
+        logger.warning(
+            f"Пользователь '{self.request.user.username}' присвоил статус ОТКАЗ "
+            f"клиенту '{self.object.first_name} {self.object.last_name}' "
+            f"(ID: {self.object.id})"
+        )
 
         return HttpResponseRedirect(success_url)

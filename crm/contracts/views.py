@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -11,6 +13,8 @@ from django.views.generic import (
 
 from .forms import ContractForm
 from .models import Contract
+
+logger = logging.getLogger("crm")
 
 
 class ContractsListView(PermissionRequiredMixin, ListView):
@@ -39,12 +43,34 @@ class ContractsCreateView(PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy('contracts:contracts-list')
     permission_required = "contracts.add_contract"
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        logger.info(
+            f"Пользователь '{self.request.user.username}' добавил новый контракт: "
+            f"'{self.object.title}' со сроком до {self.object.end_date}. "
+            f"(ID: {self.object.id})"
+        )
+
+        return response
+
 
 class ContractsUpdateView(PermissionRequiredMixin, UpdateView):
     model = Contract
     form_class = ContractForm
     template_name = 'contracts/contracts-edit.html'
     permission_required = 'contracts.change_contract'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        logger.info(
+            f"Пользователь '{self.request.user.username}' обновил контракт: "
+            f"'{self.object.title}' со сроком до {self.object.end_date}. "
+            f"(ID: {self.object.id})"
+        )
+
+        return response
 
 
 class ContractsDeleteView(PermissionRequiredMixin, DeleteView):
@@ -58,5 +84,10 @@ class ContractsDeleteView(PermissionRequiredMixin, DeleteView):
 
         self.object.is_active = False
         self.object.save()
+
+        logger.warning(
+            f"Пользователь '{self.request.user.username}' отправил в архив "
+            f"контракт '{self.object.title}' (ID: {self.object.id})"
+        )
 
         return HttpResponseRedirect(success_url)
