@@ -65,6 +65,7 @@ class ContractsUpdateView(PermissionRequiredMixin, UpdateView):
     form_class = ContractForm
     template_name = 'contracts/contracts-edit.html'
     permission_required = 'contracts.change_contract'
+    success_url = reverse_lazy('contracts:contracts-list')
 
     def form_valid(self, form):
         response = super().form_valid(form)
