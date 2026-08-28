@@ -32,7 +32,10 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "web"]
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
@@ -133,6 +136,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 
