@@ -56,7 +56,6 @@ jobs:
         SECRET_KEY: "github-actions-ci-secret-key-super-secure-2026"
         DEBUG: "False"
         DATABASE_URL: "postgres://crm_user:crm_password@localhost:5432/crm_test_db"
-
-        REDIS_URL: "redis://localhost:6379/1"
+        DJANGO_CACHE_BACKEND: "django.core.cache.backends.locmem.LocMemCache"
       run: |
         python manage.py test tests

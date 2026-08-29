@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 
 import environ
@@ -211,3 +212,9 @@ CACHES = {
         "LOCATION": env.str("REDIS_URL"),
     }
 }
+if "test" in sys.argv or os.environ.get("DJANGO_CACHE_BACKEND"):
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        }
+    }
