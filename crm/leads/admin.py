@@ -34,3 +34,12 @@ class LeadAdmin(admin.ModelAdmin):
         if "delete_selected" in actions:
             del actions["delete_selected"]
         return actions
+
+    def delete_model(self, request, obj):
+        obj.status = "refused"
+        obj.save(update_fields=["status"])
+
+        self.message_user(
+            request,
+            f"Лид '{obj.first_name} {obj.last_name}' была успешно отправлен в архив."
+        )

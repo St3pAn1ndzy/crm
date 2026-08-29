@@ -33,3 +33,13 @@ class AdAdmin(admin.ModelAdmin):
         if "delete_selected" in actions:
             del actions["delete_selected"]
         return actions
+
+    def delete_model(self, request, obj):
+
+        obj.is_active = False
+        obj.save(update_fields=["is_active"])
+
+        self.message_user(
+            request,
+            f"Рекламная кампания '{obj.title}' была успешно отправлен в архив."
+        )
