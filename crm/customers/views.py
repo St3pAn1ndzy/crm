@@ -24,28 +24,25 @@ logger = logging.getLogger("crm")
 
 class CustomersListView(PermissionRequiredMixin, ListView):
     model = Customer
-    template_name = 'customers/customers-list.html'
-    context_object_name = 'customers'
-    permission_required = 'customers.view_customer'
+    template_name = "customers/customers-list.html"
+    context_object_name = "customers"
+    permission_required = "customers.view_customer"
 
     def get_queryset(self):
-        return (
-            Customer.objects.filter(is_active=True)
-            .select_related('lead')
-        )
+        return Customer.objects.filter(is_active=True).select_related("lead")
 
 
 class CustomerDetailView(PermissionRequiredMixin, DetailView):
     model = Customer
-    template_name = 'customers/customers-detail.html'
-    permission_required = 'customers.view_customer'
+    template_name = "customers/customers-detail.html"
+    permission_required = "customers.view_customer"
 
 
 class CustomerUpdateView(PermissionRequiredMixin, UpdateView):
     model = Customer
     form_class = CustomerEditForm
-    template_name = 'customers/customers-edit.html'
-    permission_required = 'customers.change_customer'
+    template_name = "customers/customers-edit.html"
+    permission_required = "customers.change_customer"
 
     @transaction.atomic
     def form_valid(self, form):
@@ -73,7 +70,7 @@ class CustomerUpdateView(PermissionRequiredMixin, UpdateView):
 
 class CustomerDeleteView(PermissionRequiredMixin, DeleteView):
     model = Customer
-    template_name = 'customers/customers-delete.html'
+    template_name = "customers/customers-delete.html"
     success_url = reverse_lazy("customers:customers-list")
     permission_required = "customers.delete_customer"
 
@@ -95,31 +92,31 @@ class CustomerDeleteView(PermissionRequiredMixin, DeleteView):
 @permission_required("customers.add_customer", raise_exception=True)
 @transaction.atomic
 def convert_lead_to_customer_view(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ConvertLeadForm(request.POST, request.FILES)
         if form.is_valid():
-            lead = form.cleaned_data['lead']
+            lead = form.cleaned_data["lead"]
             try:
-                customer = Customer.objects.create(
-                    lead=lead
-                )
+                customer = Customer.objects.create(lead=lead)
 
                 Contract.objects.create(
                     customer=customer,
-                    title=form.cleaned_data['contract_title'],
-                    service=form.cleaned_data['service'],
-                    document=form.cleaned_data['document'],
-                    start_date=form.cleaned_data['start_date'],
-                    end_date=form.cleaned_data['end_date'],
-                    cost=form.cleaned_data['cost']
+                    title=form.cleaned_data["contract_title"],
+                    service=form.cleaned_data["service"],
+                    document=form.cleaned_data["document"],
+                    start_date=form.cleaned_data["start_date"],
+                    end_date=form.cleaned_data["end_date"],
+                    cost=form.cleaned_data["cost"],
                 )
 
                 lead.status = "converted"
                 lead.save()
 
                 cache.delete("crm_ads_statistic_list")
-                logger.info("Кэш статистики рекламы автоматически "
-                            "сброшен из-за конвертации лида.")
+                logger.info(
+                    "Кэш статистики рекламы автоматически "
+                    "сброшен из-за конвертации лида."
+                )
 
                 logger.info(
                     f"Пользователь {request.user.username} успешно "
@@ -127,7 +124,7 @@ def convert_lead_to_customer_view(request):
                     f"({lead.first_name} {lead.last_name}) в статус Активного клиента."
                 )
 
-                return redirect('customers:customers-list')
+                return redirect("customers:customers-list")
 
             except Exception as e:
                 logger.error(

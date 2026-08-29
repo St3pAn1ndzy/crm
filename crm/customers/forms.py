@@ -9,7 +9,7 @@ class ConvertLeadForm(forms.Form):
     lead = forms.ModelChoiceField(
         queryset=Lead.objects.exclude(status="converted"),
         required=True,
-        label="Выберите потенциального клиента (лида)"
+        label="Выберите потенциального клиента (лида)",
     )
 
     contract_title = forms.CharField(

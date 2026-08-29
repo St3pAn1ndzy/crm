@@ -14,9 +14,9 @@ class DashboardIndexView(TemplateView):
 
         context["products_count"] = Service.objects.filter(is_active=True).count()
         context["advertisements_count"] = Ad.objects.filter(is_active=True).count()
-        context["leads_count"] = (Lead.objects.
-                                  exclude(status__in=["refused", "converted"]).
-                                  count())
+        context["leads_count"] = Lead.objects.exclude(
+            status__in=["refused", "converted"]
+        ).count()
         context["customers_count"] = Customer.objects.filter(is_active=True).count()
 
         return context

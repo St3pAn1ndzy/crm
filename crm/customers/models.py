@@ -5,7 +5,7 @@ class Customer(models.Model):
     lead = models.OneToOneField(
         "leads.Lead",
         on_delete=models.PROTECT,
-        verbose_name="Потенциальный клиент (лид)"
+        verbose_name="Потенциальный клиент (лид)",
     )
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
@@ -14,7 +14,7 @@ class Customer(models.Model):
     is_active = models.BooleanField(
         default=True,
         verbose_name="Активен",
-        help_text="Если снять галочку, клиент уйдет в архив CRM"
+        help_text="Если снять галочку, клиент уйдет в архив CRM",
     )
 
     class Meta:

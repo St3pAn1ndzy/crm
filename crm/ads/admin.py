@@ -6,17 +6,13 @@ from .models import Ad
 @admin.action(description="Заархивировать выбранные рекламные кампании")
 def make_archived(modeladmin, request, queryset):
     updated = queryset.update(is_active=False)
-    modeladmin.message_user(
-        request, f"Успешно заархивировано объектов: {updated}."
-    )
+    modeladmin.message_user(request, f"Успешно заархивировано объектов: {updated}.")
 
 
 @admin.action(description="Разархивировать выбранные рекламные кампании")
 def make_unarchived(modeladmin, request, queryset):
     updated = queryset.update(is_active=True)
-    modeladmin.message_user(
-        request, f"Успешно разархивировано объектов: {updated}."
-    )
+    modeladmin.message_user(request, f"Успешно разархивировано объектов: {updated}.")
 
 
 @admin.register(Ad)
@@ -40,6 +36,5 @@ class AdAdmin(admin.ModelAdmin):
         obj.save(update_fields=["is_active"])
 
         self.message_user(
-            request,
-            f"Рекламная кампания '{obj.title}' была успешно отправлен в архив."
+            request, f"Рекламная кампания '{obj.title}' была успешно отправлен в архив."
         )

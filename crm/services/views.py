@@ -21,7 +21,7 @@ class ServicesListView(PermissionRequiredMixin, ListView):
     model = Service
     template_name = "services/products-list.html"
     context_object_name = "products"
-    permission_required = 'services.view_service'
+    permission_required = "services.view_service"
 
     def get_queryset(self):
         return Service.objects.filter(is_active=True)
@@ -32,7 +32,7 @@ class ServicesCreateView(PermissionRequiredMixin, CreateView):
     fields = ["title", "description", "price"]
     template_name = "services/products-create.html"
     success_url = reverse_lazy("services:products-list")
-    permission_required = 'services.add_service'
+    permission_required = "services.add_service"
 
     @transaction.atomic
     def form_valid(self, form):
@@ -50,14 +50,14 @@ class ServicesCreateView(PermissionRequiredMixin, CreateView):
 class ServicesDetailView(PermissionRequiredMixin, DetailView):
     model = Service
     template_name = "services/products-detail.html"
-    permission_required = 'services.view_service'
+    permission_required = "services.view_service"
 
 
 class ServicesUpdateView(PermissionRequiredMixin, UpdateView):
     model = Service
     fields = ["title", "description", "price"]
     template_name = "services/products-edit.html"
-    permission_required = 'services.change_service'
+    permission_required = "services.change_service"
 
     def get_success_url(self):
         return reverse_lazy("services:products-detail", kwargs={"pk": self.object.pk})
@@ -77,7 +77,7 @@ class ServicesDeleteView(PermissionRequiredMixin, DeleteView):
     model = Service
     success_url = reverse_lazy("services:products-list")
     template_name = "services/products-delete.html"
-    permission_required = 'services.delete_service'
+    permission_required = "services.delete_service"
 
     def form_valid(self, form):
         success_url = self.get_success_url()

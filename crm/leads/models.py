@@ -19,14 +19,11 @@ class Lead(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        verbose_name="Рекламная кампания"
+        verbose_name="Рекламная кампания",
     )
 
     status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default="new",
-        verbose_name="Статус лида"
+        max_length=20, choices=STATUS_CHOICES, default="new", verbose_name="Статус лида"
     )
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")

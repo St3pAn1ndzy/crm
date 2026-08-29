@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -24,16 +25,14 @@ from crm.views import DashboardIndexView
 urlpatterns = [
     path("", DashboardIndexView.as_view(), name="index"),
     path("", include("django_prometheus.urls")),
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     path("auth/", include("django.contrib.auth.urls")),
-    path('', include('services.urls')),
-    path('', include('ads.urls')),
-    path('', include('leads.urls')),
-    path('', include('customers.urls')),
-    path('', include('contracts.urls')),
+    path("", include("services.urls")),
+    path("", include("ads.urls")),
+    path("", include("leads.urls")),
+    path("", include("customers.urls")),
+    path("", include("contracts.urls")),
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(
-        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
-    )
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

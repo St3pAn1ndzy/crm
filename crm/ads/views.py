@@ -22,21 +22,18 @@ logger = logging.getLogger("crm")
 
 class AdsListView(PermissionRequiredMixin, ListView):
     model = Ad
-    template_name = 'ads/ads-list.html'
-    context_object_name = 'ads'
+    template_name = "ads/ads-list.html"
+    context_object_name = "ads"
     permission_required = "ads.view_ad"
 
     def get_queryset(self):
-        return (
-            Ad.objects.filter(is_active=True)
-            .select_related('product')
-        )
+        return Ad.objects.filter(is_active=True).select_related("product")
 
 
 class AdsCreateView(PermissionRequiredMixin, CreateView):
     model = Ad
     fields = ["title", "channel", "product", "budget"]
-    template_name = 'ads/ads-create.html'
+    template_name = "ads/ads-create.html"
     success_url = reverse_lazy("ads:ads-list")
     permission_required = "ads.add_ad"
 
@@ -52,22 +49,24 @@ class AdsCreateView(PermissionRequiredMixin, CreateView):
         )
 
         cache.delete("crm_ads_statistic_list")
-        logger.info("Кэш статистики рекламы автоматически сброшен из-за "
-                    "добавления новой рекламной кампании.")
+        logger.info(
+            "Кэш статистики рекламы автоматически сброшен из-за "
+            "добавления новой рекламной кампании."
+        )
 
         return response
 
 
 class AdsDetailView(PermissionRequiredMixin, DetailView):
     model = Ad
-    template_name = 'ads/ads-detail.html'
+    template_name = "ads/ads-detail.html"
     permission_required = "ads.view_ad"
 
 
 class AdsUpdateView(PermissionRequiredMixin, UpdateView):
     model = Ad
     fields = ["title", "channel", "product", "budget"]
-    template_name = 'ads/ads-edit.html'
+    template_name = "ads/ads-edit.html"
     permission_required = "ads.change_ad"
 
     def get_success_url(self):
@@ -83,15 +82,17 @@ class AdsUpdateView(PermissionRequiredMixin, UpdateView):
         )
 
         cache.delete("crm_ads_statistic_list")
-        logger.info("Кэш статистики рекламы автоматически сброшен из-за "
-                    "обновления рекламной кампании.")
+        logger.info(
+            "Кэш статистики рекламы автоматически сброшен из-за "
+            "обновления рекламной кампании."
+        )
 
         return response
 
 
 class AdsDeleteView(PermissionRequiredMixin, DeleteView):
     model = Ad
-    template_name = 'ads/ads-delete.html'
+    template_name = "ads/ads-delete.html"
     success_url = reverse_lazy("ads:ads-list")
     permission_required = "ads.delete_ad"
 
@@ -107,16 +108,18 @@ class AdsDeleteView(PermissionRequiredMixin, DeleteView):
         )
 
         cache.delete("crm_ads_statistic_list")
-        logger.info("Кэш статистики рекламы автоматически сброшен из-за "
-                    "удаления рекламной кампании.")
+        logger.info(
+            "Кэш статистики рекламы автоматически сброшен из-за "
+            "удаления рекламной кампании."
+        )
 
         return HttpResponseRedirect(success_url)
 
 
 class AdsStatisticListView(PermissionRequiredMixin, ListView):
     model = Ad
-    template_name = 'ads/ads-statistic.html'
-    context_object_name = 'ads'
+    template_name = "ads/ads-statistic.html"
+    context_object_name = "ads"
     permission_required = "ads.view_ad"
 
     def get_queryset(self):
@@ -124,29 +127,28 @@ class AdsStatisticListView(PermissionRequiredMixin, ListView):
         cached_data = cache.get(cache_key)
 
         if cached_data is not None:
-            logger.info("Статистика рекламы успешно загружена "
-                        "ИЗ КЭША (без запросов к БД).")
+            logger.info(
+                "Статистика рекламы успешно загружена ИЗ КЭША (без запросов к БД)."
+            )
             return cached_data
 
-        logger.warning("Кэш пуст! Запускается тяжелый расчет статистики "
-                       "по базе данных PostgreSQL...")
+        logger.warning(
+            "Кэш пуст! Запускается тяжелый расчет статистики "
+            "по базе данных PostgreSQL..."
+        )
 
         campaigns = Ad.objects.annotate(
-            leads_count=Count(
-                "lead",
-                filter=~Q(lead__status="refused"),
-                distinct=True
-            ),
+            leads_count=Count("lead", filter=~Q(lead__status="refused"), distinct=True),
             customers_count=Count(
                 "lead__customer",
-                filter=Q(lead__customer__isnull=False) &
-                       Q(lead__customer__is_active=True),
-                distinct=True
+                filter=Q(lead__customer__isnull=False)
+                & Q(lead__customer__is_active=True),
+                distinct=True,
             ),
             active_revenue=Sum(
                 "lead__customer__contract__cost",
-                filter=Q(lead__customer__contract__is_active=True)
-            )
+                filter=Q(lead__customer__contract__is_active=True),
+            ),
         )
 
         final_list = list(campaigns)

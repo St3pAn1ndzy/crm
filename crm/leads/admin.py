@@ -5,24 +5,27 @@ from .models import Lead
 
 @admin.action(description="Заархивировать выбранных лидов")
 def make_archived(modeladmin, request, queryset):
-    updated = queryset.update(status='refused')
-    modeladmin.message_user(
-        request, f"Успешно заархивировано объектов: {updated}."
-    )
+    updated = queryset.update(status="refused")
+    modeladmin.message_user(request, f"Успешно заархивировано объектов: {updated}.")
 
 
 @admin.action(description="Разархивировать выбранных лидов")
 def make_unarchived(modeladmin, request, queryset):
-    updated = queryset.update(status='new')
-    modeladmin.message_user(
-        request, f"Успешно разархивировано объектов: {updated}."
-    )
+    updated = queryset.update(status="new")
+    modeladmin.message_user(request, f"Успешно разархивировано объектов: {updated}.")
 
 
 @admin.register(Lead)
 class LeadAdmin(admin.ModelAdmin):
-    list_display = ("id", "first_name", "last_name",
-                    "phone", "email", "advertisement", "status")
+    list_display = (
+        "id",
+        "first_name",
+        "last_name",
+        "phone",
+        "email",
+        "advertisement",
+        "status",
+    )
     list_filter = ("status", "advertisement")
     search_fields = ("first_name", "last_name", "phone", "email")
     list_editable = ("status",)
@@ -41,5 +44,5 @@ class LeadAdmin(admin.ModelAdmin):
 
         self.message_user(
             request,
-            f"Лид '{obj.first_name} {obj.last_name}' была успешно отправлен в архив."
+            f"Лид '{obj.first_name} {obj.last_name}' была успешно отправлен в архив.",
         )

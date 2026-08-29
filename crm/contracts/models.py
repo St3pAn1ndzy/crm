@@ -29,21 +29,15 @@ class Contract(models.Model):
 
     end_date = models.DateField(verbose_name="Дата окончания действия")
 
-    cost = models.DecimalField(
-        max_digits=12, decimal_places=2, verbose_name="Сумма"
-    )
+    cost = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Сумма")
 
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name="Добавлено в CRM"
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True, verbose_name="Изменено в CRM"
-    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Добавлено в CRM")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Изменено в CRM")
 
     is_active = models.BooleanField(
         default=True,
         verbose_name="Активен",
-        help_text="Если снять галочку, контракт уйдет в архив"
+        help_text="Если снять галочку, контракт уйдет в архив",
     )
 
     class Meta:

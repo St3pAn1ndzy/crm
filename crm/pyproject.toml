@@ -3,7 +3,7 @@ name = "crm"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Stepan Obukhov",email = "stepanobukhov2009@gmail.com"}
+    { name = "Stepan Obukhov", email = "stepanobukhov2009@gmail.com" }
 ]
 readme = "README.md"
 requires-python = ">=3.12,<4.0"
@@ -30,6 +30,12 @@ build-backend = "poetry.core.masonry.api"
 [tool.ruff]
 target-version = "py312"
 line-length = 88
+extend-exclude = [
+    "**/migrations/*",
+    "**/settings/*",
+    "settings.py"
+]
+
 
 [tool.ruff.lint]
 select = [
