@@ -1,3 +1,6 @@
+from decimal import Decimal
+
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -29,7 +32,12 @@ class Contract(models.Model):
 
     end_date = models.DateField(verbose_name="Дата окончания действия")
 
-    cost = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Сумма")
+    cost = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        verbose_name="Сумма",
+        validators=[MinValueValidator(Decimal("0.00"))],
+    )
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Добавлено в CRM")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Изменено в CRM")

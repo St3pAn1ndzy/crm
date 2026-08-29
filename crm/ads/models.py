@@ -1,3 +1,6 @@
+from decimal import Decimal
+
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -11,7 +14,12 @@ class Ad(models.Model):
     product = models.ForeignKey(
         "services.Service", on_delete=models.PROTECT, verbose_name="Продвигаемая услуга"
     )
-    budget = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Бюджет")
+    budget = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="Бюджет",
+        validators=[MinValueValidator(Decimal("0.00"))],
+    )
     is_active = models.BooleanField(
         default=True,
         verbose_name="Активна",
