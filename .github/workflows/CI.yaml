@@ -1,20 +1,60 @@
-name: CI-develop
+name: CRM Continuous Integration (CI)
+
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "develop" ]
+    branches: [ "main" ]
 
 jobs:
-  build:
+  code-quality-and-tests:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
 
-      - name: Install and run Ruff
-        run: |
-          pip install ruff 
-          ruff check .
+    services:
+      postgres_db:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: crm_test_db
+          POSTGRES_USER: crm_user
+          POSTGRES_PASSWORD: crm_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Checkout repository code
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install Poetry
+      run: |
+        curl -sSL https://python-poetry.org | python3 -
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Install dependencies via Poetry
+      run: |
+        poetry config virtualenvs.create false
+        poetry install --no-interaction --no-root
+
+    - name: Run Static Analysis & Linting (Ruff)
+      run: |
+        ruff check .
+        ruff format --check .
+
+    - name: Run Django Automated Unit Tests
+      env:
+        SECRET_KEY: "github-actions-ci-secret-key-super-secure-2026"
+        DEBUG: "False"
+        DATABASE_URL: "postgres://crm_user:crm_password@localhost:5432/crm_test_db"
+
+        REDIS_URL: "redis://localhost:6379/1"
+      run: |
+        python crm/manage.py test crm.tests
