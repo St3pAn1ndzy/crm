@@ -205,16 +205,16 @@ LOGGING = {
     },
 }
 
-
-CACHES = {
-    "default": {
-        "BACKEND": "django_prometheus.cache.backends.redis.RedisCache",
-        "LOCATION": env.str("REDIS_URL"),
-    }
-}
-if "test" in sys.argv or os.environ.get("DJANGO_CACHE_BACKEND"):
+if "test" in sys.argv:
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        }
+    }
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": os.environ.get("REDIS_URL"),
         }
     }
