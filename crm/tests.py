@@ -64,6 +64,7 @@ class CrmBusinessLogicTestCase(TestCase):
         next_year = today + timedelta(days=365)
 
         Contract.objects.create(
+            title="Договор А",
             customer=customer,
             service=self.service,
             cost=30000,
@@ -73,6 +74,7 @@ class CrmBusinessLogicTestCase(TestCase):
         )
 
         Contract.objects.create(
+            title="Договор B",
             customer=customer,
             service=self.service,
             cost=15000,
