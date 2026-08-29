@@ -40,6 +40,7 @@ jobs:
         poetry-version: "2.4.1"
 
     - name: Install Dependencies
+      working-directory: ./crm
       run: |
         poetry config virtualenvs.create false
         poetry install --no-interaction --no-root
@@ -50,6 +51,7 @@ jobs:
         ruff format --check .
 
     - name: Run Django Automated Unit Tests
+      working-directory: ./crm
       env:
         SECRET_KEY: "github-actions-ci-secret-key-super-secure-2026"
         DEBUG: "False"
@@ -57,4 +59,4 @@ jobs:
 
         REDIS_URL: "redis://localhost:6379/1"
       run: |
-        python crm/manage.py test crm.tests
+        python crm/manage.py test tests
