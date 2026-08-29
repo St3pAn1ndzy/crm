@@ -85,7 +85,7 @@ class CustomerDeleteView(PermissionRequiredMixin, DeleteView):
 
         logger.warning(
             f"Пользователь '{self.request.user.username}' отправил в архив "
-            f"клиента '{self.object.first_name} {self.object.last_name}' "
+            f"клиента '{self.object.lead.first_name} {self.object.lead.last_name}' "
             f"(ID: {self.object.id})"
         )
 

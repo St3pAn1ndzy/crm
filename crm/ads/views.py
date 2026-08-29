@@ -3,6 +3,7 @@ import logging
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.cache import cache
 from django.db import transaction
+from django.db.models import Q
 from django.db.models.aggregates import Count, Sum
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -131,11 +132,28 @@ class AdsStatisticListView(PermissionRequiredMixin, ListView):
                        "по базе данных PostgreSQL...")
 
         campaigns = Ad.objects.annotate(
-            leads_count=Count('lead', distinct=True),
-            customers_count=Count('lead__customer', distinct=True),
-            profit=Sum('lead__customer__contract__cost'))
+            leads_count=Count(
+                "lead",
+                filter=~Q(lead__status="refused"),
+                distinct=True
+            ),
+            customers_count=Count(
+                "lead__customer",
+                filter=Q(lead__customer__is_active=True),
+                distinct=True
+            ),
+            active_revenue=Sum(
+                "lead__customer__contract__cost",
+                filter=Q(lead__customer__contract__is_active=True)
+            )
+        )
 
-        cached_list = list(campaigns)
-        cache.set(cache_key, cached_list, 86400)
+        final_list = list(campaigns)
 
-        return cached_list
+        for ad in final_list:
+            revenue = ad.active_revenue or 0
+            ad.profit = revenue - ad.budget
+
+        cache.set(cache_key, final_list, 86400)
+
+        return final_list

@@ -30,7 +30,7 @@ class LeadsViewList(PermissionRequiredMixin, ListView):
 
 class LeadsCreateView(PermissionRequiredMixin, CreateView):
     model = Lead
-    fields = ['first_name', 'last_name', 'phone', 'email']
+    fields = ['first_name', 'last_name', 'phone', 'email', "advertisement"]
     template_name = 'leads/leads-create.html'
     success_url = reverse_lazy("leads:leads-list")
     permission_required = 'leads.add_lead'
@@ -60,7 +60,7 @@ class LeadsDetailView(PermissionRequiredMixin, DetailView):
 
 class LeadsUpdateView(PermissionRequiredMixin, UpdateView):
     model = Lead
-    fields = ['first_name', 'last_name', 'phone', 'email']
+    fields = ['first_name', 'last_name', 'phone', 'email', "advertisement"]
     template_name = 'leads/leads-edit.html'
     permission_required = 'leads.change_lead'
 
