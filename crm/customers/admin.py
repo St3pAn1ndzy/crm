@@ -15,7 +15,8 @@ def make_archived(modeladmin, request, queryset):
 
     updated = queryset.update(is_active=False)
     modeladmin.message_user(
-        request, f"Успешно заархивировано клиентов: {updated} (связанные лиды переведены в статус 'Отказ')."
+        request, f"Успешно заархивировано клиентов: {updated} "
+                 f"(связанные лиды переведены в статус 'Отказ')."
     )
 
 
@@ -80,8 +81,10 @@ class CustomerAdmin(admin.ModelAdmin):
                 obj.is_active = False
                 obj.save(update_fields=["is_active"])
 
-                client_name = f"{obj.lead.first_name} {obj.lead.last_name}" if obj.lead else f"ID {obj.id}"
-                self.message_user(request, f"Клиент '{client_name}' и его контракты успешно заархивированы.")
+                client_name = f"{obj.lead.first_name} {obj.lead.last_name}" \
+                    if obj.lead else f"ID {obj.id}"
+                self.message_user(request, f"Клиент '{client_name}' и его "
+                                           f"контракты успешно заархивированы.")
 
                 from django.http import HttpResponseRedirect
                 return HttpResponseRedirect(request.path.split('/delete/')[0] + '/')

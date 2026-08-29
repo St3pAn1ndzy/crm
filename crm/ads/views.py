@@ -139,7 +139,8 @@ class AdsStatisticListView(PermissionRequiredMixin, ListView):
             ),
             customers_count=Count(
                 "lead__customer",
-                filter=Q(lead__customer__isnull=False) & Q(lead__customer__is_active=True),
+                filter=Q(lead__customer__isnull=False) &
+                       Q(lead__customer__is_active=True),
                 distinct=True
             ),
             active_revenue=Sum(
