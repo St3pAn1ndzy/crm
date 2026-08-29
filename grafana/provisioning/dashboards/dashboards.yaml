@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: 'Django CRM Dashboards'
+    orgId: 1
+    folder: 'CRM Monitor'
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards
