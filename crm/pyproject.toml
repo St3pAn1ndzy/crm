@@ -1,0 +1,54 @@
+[project]
+name = "crm"
+version = "0.1.0"
+description = ""
+authors = [
+    { name = "Stepan Obukhov", email = "stepanobukhov2009@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.12,<4.0"
+dependencies = [
+    "django (>=6.1,<7.0)",
+    "markdown (>=3.10.3,<4.0.0)",
+    "django-filter (>=26.1,<27.0)",
+    "ruff (>=0.16.4,<0.17.0)",
+    "psycopg[binary] (>=3.3.4,<4.0.0)",
+    "django-environ (>=0.14.0,<0.15.0)",
+    "redis (>=8.1.0,<9.0.0)",
+    "django-prometheus (>=2.5.0,<3.0.0)",
+    "django-redis (>=7.0.0,<8.0.0)",
+    "gunicorn (>=26.2.0,<27.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+# Ruff config
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+extend-exclude = [
+    "**/migrations/*",
+    "**/settings/*",
+    "settings.py"
+]
+
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "W",
+    "F",
+    "I",
+    "DJ",
+    "UP",
+]
+
+ignore = []
+
+[tool.ruff.lint.per-file-ignores]
+"**/migrations/*.py" = ["E501", "D101", "RUF012"]
+"**/settings.py" = ["E501"]

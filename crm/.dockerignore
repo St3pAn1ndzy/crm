@@ -1,0 +1,31 @@
+# Игнорируем локальные файлы виртуальных окружений и кэша Python
+.venv/
+venv/
+ENV/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ruff_cache/
+
+# Игнорируем файлы Git и GitHub автоматизации (workflows)
+.git/
+.github/
+
+# Игнорируем локальные файлы конфигурации инфраструктуры
+.env
+../prometheus.yml
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Игнорируем локальные папки логов и медиа-файлов (чтобы не забить контейнер старыми тестами)
+logs/
+media/
+
+# Игнорируем документацию и файлы настроек IDE
+README.md
+.idea/
+.vscode/
+*.swp
